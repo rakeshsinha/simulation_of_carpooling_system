@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Carpool by Rakesh Sinha</title>
+	<style>
+    	#container { position: relative; 
+    				height:1200;
+    				width:600;}
+    	#circlecanvas { position: absolute; top: 0; left: 0; }
+    	#tempCanvas { position: absolute; top: 0; left: 0; }
+	</style>
+	<script type="text/javascript" src="function.js" ></script>
+	<script type="text/javascript" src="variables.js" ></script>
+</head>
+
+<body onload="checkUsers()">
+	
+	<!-- <div id="canvas-wrapper">
+		<iframe width="1200" height="600" frameborder="0" style="border:0"
+  			src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCV3M87-nMhQuuTXvcu3uas1OhNTkXiTP8
+    		&q=Connaught+Place,New Delhi+Delhi" allowfullscreen>
+		</iframe>
+		<div id="my_canvas-container"> -->
+		<div class="container" id="container">
+			<canvas class="tempCanvas" id="tempCanvas" width = "1200" height = "600">No canvas</canvas>
+    		<canvas class="circlecanvas" id="circlecanvas" width = "1200" height = "600">No canvas</canvas>
+    	</div><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    	<br><br><br><br><br><br><br>
+    	<button onclick="decision();">Next</button>
+    	<!-- </div>
+    </div>  -->
+    
+    <script>
+    	function sevenToD(destX, destY, incX) {
+    		//window.alert("moveCircleRec");
+    		gOriginX = gOriginX + incX;
+    		gOriginY = gOriginY + 1;
+			ctxTemp.clearRect(0, 0, 1200, 600);
+			ctxTemp.beginPath();
+			ctxTemp.fillStyle = "rgb(0,200,0)";
+			ctxTemp.arc(gOriginX, gOriginY, 12, 0, Math.PI * 2, false);
+			ctxTemp.fill();
+			ctxTemp.moveTo(gOriginX, gOriginY);
+    		ctxTemp.lineTo(destX, destY);
+    		ctxTemp.stroke();
+			ctxTemp.closePath();
+			if (gOriginX > destX && gOriginY > destY){
+				clearInterval(intervalVar);
+				//var incX = (usersDest[0].x - gOriginX)/(usersDest[0].y - gOriginY);
+				//intervalVar = setInterval(sevenToD, 1000/10, usersOrigin[7].x, usersOrigin[7].y, incX);
+			}
+		}
+    	
+    	function toOSeven(destX, destY, incX) {
+    		//window.alert("moveCircleRec");
+    		gOriginX = gOriginX + incX;
+    		gOriginY = gOriginY + 1;
+			ctxTemp.clearRect(0, 0, 1200, 600);
+			ctxTemp.beginPath();
+			ctxTemp.fillStyle = "rgb(0,200,0)";
+			ctxTemp.arc(gOriginX, gOriginY, 12, 0, Math.PI * 2, false);
+			ctxTemp.fill();
+			ctxTemp.moveTo(gOriginX, gOriginY);
+    		ctxTemp.lineTo(destX, destY);
+    		ctxTemp.stroke();
+			ctxTemp.closePath();
+			if (gOriginX > destX && gOriginY > destY){
+				clearInterval(intervalVar);
+				var incX = (usersDest[0].x - gOriginX)/(usersDest[0].y - gOriginY);
+				intervalVar = setInterval(sevenToD, 1000/5, usersDest[0].x, usersDest[0].y, incX);
+			}
+		}
+    	
+    	function moveCircleRec(destX, destY, incX){
+    		if (gOriginX < destX && gOriginY < destY){
+    			//window.alert("moveCircleRec");
+    			gOriginX = gOriginX + incX;
+    			gOriginY = gOriginY + 1;
+				ctxTemp.clearRect(0, 0, 1200, 600);
+				ctxTemp.beginPath();
+				ctxTemp.fillStyle = "rgb(0,200,0)";
+				ctxTemp.arc(gOriginX, gOriginY, 12, 0, Math.PI * 2, false);
+				ctxTemp.fill();
+				ctxTemp.moveTo(gOriginX, gOriginY);
+    			ctxTemp.lineTo(destX, destY);
+    			ctxTemp.stroke();
+				ctxTemp.closePath();
+				if (localStorage.getItem("user1") == "user1" && localStorage.getItem("user2") == "user2"){
+					clearInterval(intervalVar);
+					var incX = (usersOrigin[6].x - gOriginX)/(usersOrigin[6].y - gOriginY);
+					intervalVar = setInterval(toOSeven, 1000/2, usersOrigin[6].x, usersOrigin[6].y, incX);
+				}
+    		}
+    	}
+    	
+    	function moveCircle() {
+			if (localStorage.getItem("user1") == "user1" && localStorage.getItem("user2") == "user2"){
+				//window.alert("both users");
+				clearInterval(intervalVar);
+				var incX = (usersOrigin[7].x - usersOrigin[0].x)/(usersOrigin[7].y - usersOrigin[0].y);
+				setInterval(moveCircleRec, 1000/10, usersOrigin[7].x, usersOrigin[7].y, usersOrigin[0].x, usersOrigin[0].y, incX);
+				//moveCircleRec(usersOrigin[7].x, usersOrigin[7].y, usersOrigin[0].x, usersOrigin[0].y, incX);
+				moveCircleRec(usersDest[0].x, usersDest[0].y, usersOrigin[7].x, usersOrigin[7].y, incX);
+				moveCircleRec(usersDest[7].x, usersDest[7].y, usersDest[0].x, usersDest[0].y, incX);
+			} else if (localStorage.getItem("user1") == "user1"){
+				window.alert("user1");
+				clearInterval(intervalVar);
+				var incX = (usersDest[0].x - usersOrigin[0].x)/(usersDest[0].y - usersOrigin[0].y);
+				gOriginX = usersOrigin[0].x;
+				gOriginY = usersOrigin[0].y;
+				intervalVar = setInterval(moveCircleRec, 1000/2, usersDest[0].x, usersDest[0].y, incX);
+			}
+		}
+    	
+    	function drawArea() {
+    		//window.alert("I am in drawArea");
+    		ctx.moveTo(300, 150);
+    		ctx.beginPath();
+    		ctx.arc(300, 150, 300, 0, Math.PI * 2, false);
+    		ctx.stroke();
+    		ctx.closePath();
+    		ctx.moveTo(900, 150);
+    		ctx.beginPath();
+    		ctx.arc(900, 150, 300, 0, Math.PI * 2, false);
+    		ctx.stroke();
+    		ctx.closePath();
+    		ctx.moveTo(900, 300);
+    		ctx.beginPath();
+    		ctx.arc(900, 450, 300, 0, Math.PI * 2, false);
+    		ctx.stroke();
+    		ctx.closePath();
+    		ctx.moveTo(300, 450);
+    		ctx.beginPath();
+    		ctx.arc(300, 450, 300, 0, Math.PI * 2, false);
+    		ctx.stroke();
+    		ctx.closePath();
+		}
+    </script>
+	<script>
+		localStorage.setItem("user1", "default");
+		localStorage.setItem("user2", "default");
+		var intervalVar;
+		var gOriginX, gOriginY;
+		
+		var ctx = document.getElementById("circlecanvas").getContext("2d");
+		var ctxTemp = document.getElementById("tempCanvas").getContext("2d");
+		
+		//All the Origins
+		for (var i = 1; i < usersOrigin.length; i++) {
+			ctx.beginPath();
+			ctx.fillStyle = "rgb(200,0,0)";
+			ctx.arc(usersOrigin[i].x, usersOrigin[i].y, 12, 0, Math.PI * 2, false);
+			ctx.fill();
+			ctx.font = 'bold 10pt Courier';
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            ctx.fillText(usersOrigin[i].id, usersOrigin[i].x, usersOrigin[i].y+3);
+			ctx.closePath();
+		}
+		
+		//All the destinations
+		for (var i = 0; i < usersDest.length; i++) {
+			ctx.beginPath();
+			ctx.fillStyle = "rgb(100,0,100)";
+			ctx.arc(usersDest[i].x, usersDest[i].y, 12, 0, Math.PI * 2, false);
+			ctx.fill();
+			ctx.font = 'bold 10pt Courier';
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            ctx.fillText(usersDest[i].id, usersDest[i].x, usersDest[i].y+3);
+			ctx.closePath();
+		}
+		
+		//My moving User
+		ctxTemp.beginPath();
+		ctxTemp.fillStyle = "rgb(200,0,0)";
+		ctxTemp.arc(usersOrigin[0].x, usersOrigin[0].y, 12, 0, Math.PI * 2, false);
+		ctxTemp.fill();
+		ctxTemp.font = 'bold 10pt Courier';
+		ctxTemp.fillStyle = 'white';
+		ctxTemp.textAlign = 'center';
+		ctxTemp.fillText(usersOrigin[0].id, usersOrigin[0].x, usersOrigin[0].y+3);
+		ctxTemp.closePath();
+		
+		//Cars
+		for (var i = 0; i < cars.length; i++) {
+			ctx.beginPath();
+			ctx.arc(cars[i].x, cars[i].y, 12, 0, Math.PI * 2, false);
+			ctx.font = 'bold 10pt Courier';
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.fillText(cars[i].id, cars[i].x, cars[i].y+3);
+			ctx.closePath();
+		}
+		//document.write("<br></br><button onclick=\"opennewtab('singleUserLogin.html')\">login one user</button>");
+	</script>
+	<script>
+		function checkUsers() {
+			window.alert("I am in checkUsers");
+			drawArea();
+			intervalVar = setInterval(moveCircle, 1000 / 10);
+			//moveCircle();
+		}
+	</script>
+</body>
+</html>
